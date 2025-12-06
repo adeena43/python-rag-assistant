@@ -14,13 +14,24 @@ os.environ["USER_AGENT"] = "PythonicAI/1.0 (+adinafraz01@gmail.com)"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 # Load env variables
+# Load .env for local development
 load_dotenv()
-openai_key = os.getenv("OPENAI_API_KEY")
 
+import streamlit as st
+
+# 1️⃣ Check Streamlit Cloud Secrets
+openai_key = st.secrets.get("OPENAI_API_KEY")
+
+# 2️⃣ Fallback to .env for local development
 if not openai_key:
-    raise ValueError("OPENAI_API_KEY not found in environment variables. Please create a .env file with your API key.")
+    openai_key = os.getenv("OPENAI_API_KEY")
 
-os.environ["OPENAI_API_KEY"] = openai_key
+# 3️⃣ If still missing, show error (but don't crash the app)
+if not openai_key:
+    st.error("OPENAI_API_KEY is missing. Add it in Streamlit Secrets or your .env file.")
+else:
+    os.environ["OPENAI_API_KEY"] = openai_key
+
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
@@ -177,4 +188,5 @@ def answer_question(question: str, retriever):
         return answer.content
         
     except Exception as e:
+
         return f"Error generating answer: {str(e)}"
