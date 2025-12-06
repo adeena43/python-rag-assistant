@@ -5,6 +5,6 @@ langchain-openai
 openai
 python-dotenv
 faiss-cpu
+pypdf
 beautifulsoup4
 requests
-pypdf
