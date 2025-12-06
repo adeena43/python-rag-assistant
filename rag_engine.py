@@ -20,7 +20,7 @@ load_dotenv()
 import streamlit as st
 
 # 1️⃣ Check Streamlit Cloud Secrets
-openai_key = st.secrets.get("OPENAI_API_KEY")
+openai_key = os.getenv("OPENAI_API_KEY")
 
 # 2️⃣ Fallback to .env for local development
 if not openai_key:
@@ -190,3 +190,4 @@ def answer_question(question: str, retriever):
     except Exception as e:
 
         return f"Error generating answer: {str(e)}"
+
